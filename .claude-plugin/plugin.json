@@ -1,0 +1,6 @@
+{
+  "name": "pending-decisions",
+  "version": "0.1.0",
+  "description": "Tracks what the AI is waiting on you to decide in the main conversation: a reminder above the prompt, and /decisions opens a pane to quote, accept or remove each item.",
+  "types": "./types/index.d.ts"
+}

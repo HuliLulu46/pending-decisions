@@ -1,0 +1,5 @@
+{
+  "name": "pending-decisions",
+  "owner": { "name": "HuliLulu46" },
+  "plugins": [{ "name": "pending-decisions", "source": "./" }]
+}
