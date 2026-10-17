@@ -299,9 +299,10 @@ export const register: Register = on => {
     if (e.props.hasSurvey || e.props.view.agentId !== undefined || items.length === 0) return next(e)
     const below = await next(e)
     const { Box, Text, Button } = $.ui.resolve(e)
+    // The engine refuses its own node under a Box with a width, so the width sits on the decisions row alone
     return (
-      <Box flexDirection="column" width={e.props.bodyColumns}>
-        <Box flexDirection="row" gap={1}>
+      <Box flexDirection="column">
+        <Box flexDirection="row" gap={1} width={e.props.bodyColumns}>
           <Text color="warning" bold>
             ⚖ {items.length} pending decisions
           </Text>
