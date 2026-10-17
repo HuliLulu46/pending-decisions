@@ -108,8 +108,8 @@ test('a turn feeds Haiku, the band and pane show the result, buttons quote, acce
   })
   on('ui.open', () => ({ value: { isPlaced: true as const } }))
   on('ui.render', { component: 'AbovePrompt' }, ($, e) => {
-    const { Box } = $.ui.resolve(e)
-    return <Box />
+    const { Text } = $.ui.resolve(e)
+    return <Text>lower band</Text>
   })
 
   await $.session.start({ cwd: '/repo', surface: 'terminal', isInteractive: true })
@@ -138,6 +138,7 @@ test('a turn feeds Haiku, the band and pane show the result, buttons quote, acce
     const band = await $.ui.mount({ plugin: 'pending-decisions', surface, component: 'AbovePrompt', props: BAND })
     expect(await band.find({ type: 'Text', text: /2 pending decisions/ })).toBeDefined()
     expect(await band.find({ type: 'Text', text: /①Storage format ②Commit it/ })).toBeDefined()
+    expect(await band.find({ type: 'Text', text: 'lower band' })).toBeDefined()
     await band.unmount()
   }
 
@@ -211,8 +212,8 @@ test('a resumed session loads its own board; /clear empties and forgets it', asy
   on('session.end', ($, e) => ({ sessionId: e.sessionId }))
   on('turn.start', ($, e) => ({ turnId: e.turnId }))
   on('ui.render', { component: 'AbovePrompt' }, ($, e) => {
-    const { Box } = $.ui.resolve(e)
-    return <Box />
+    const { Text } = $.ui.resolve(e)
+    return <Text>lower band</Text>
   })
   const bandText = async () => {
     const band = await $.ui.mount({ plugin: 'pending-decisions', surface: 'terminal', component: 'AbovePrompt', props: BAND })
@@ -227,6 +228,11 @@ test('a resumed session loads its own board; /clear empties and forgets it', asy
   await $.session.end({ reason: 'clear', sessionId: 'old', resume: {} as never })
   sessionId = 'new'
   expect(await bandText()).toBeUndefined()
+  for (const surface of SURFACES) {
+    const band = await $.ui.mount({ plugin: 'pending-decisions', surface, component: 'AbovePrompt', props: BAND })
+    expect(await band.find({ type: 'Text', text: 'lower band' })).toBeDefined()
+    await band.unmount()
+  }
   expect(store.has('session:old')).toBe(false)
 
   await $.turn.start({ text: 'hi', turnId: 't2' })

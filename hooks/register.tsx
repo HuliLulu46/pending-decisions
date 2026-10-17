@@ -297,18 +297,22 @@ export const register: Register = on => {
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
     const { items } = await read($, board)
     if (e.props.hasSurvey || e.props.view.agentId !== undefined || items.length === 0) return next(e)
+    const below = await next(e)
     const { Box, Text, Button } = $.ui.resolve(e)
     return (
-      <Box flexDirection="row" gap={1} width={e.props.bodyColumns}>
-        <Text color="warning" bold>
-          ⚖ {items.length} pending decisions
-        </Text>
-        <Box flexGrow={1} flexShrink={1}>
-          <Text dimColor wrap="truncate-end">
-            {summary(items)}
+      <Box flexDirection="column" width={e.props.bodyColumns}>
+        <Box flexDirection="row" gap={1}>
+          <Text color="warning" bold>
+            ⚖ {items.length} pending decisions
           </Text>
+          <Box flexGrow={1} flexShrink={1}>
+            <Text dimColor wrap="truncate-end">
+              {summary(items)}
+            </Text>
+          </Box>
+          <Button key="open" label="Open" onPress={() => void openPane($)} />
         </Box>
-        <Button key="open" label="Open" onPress={() => void openPane($)} />
+        {below}
       </Box>
     )
   })
